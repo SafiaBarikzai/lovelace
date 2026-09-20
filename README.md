@@ -27,7 +27,7 @@ Then visit <http://localhost:8000/>.
 
 ## Deployment
 
-Pushing to the deployment branch runs `.github/workflows/deploy-pages.yml`,
+Pushing to `main` runs `.github/workflows/deploy-pages.yml`,
 which uploads the repository as-is and publishes it to GitHub Pages at
 <https://safiabarikzai.github.io/lovelace/>.
 
