@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCSWomen Lovelace Colloquium — homepage layout</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#1B1F3B;
+    --paper:#F6F4EF;
+    --coral:#E4536D;
+    --teal:#187F7A;
+    --violet:#5B3E8C;
+    --gold:#D69A2D;
+    --line: rgba(27,31,59,0.14);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:500;
+    margin:0;
+  }
+
+  /* ---- masthead ---- */
+  .masthead{
+    max-width:min(94vw, 1200px);
+    margin:0 auto;
+    padding:32px 24px 18px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+  }
+  .masthead-text{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  /* ---- mascot + speech bubble: the bubble links to the GoFundMe, same
+     as the announcement bar, but as a second, more playful prompt right
+     where visitors are already looking (at Ada). Centred above the
+     image rather than pinned to one side, so it stays clear of the
+     viewport edge at any width without needing its own breakpoints. ---- */
+  .masthead-mascot-wrap{
+    position:relative;
+    display:inline-block;
+    flex-shrink:0;
+    text-decoration:none;
+  }
+  .masthead-mascot{
+    display:block;
+    width:clamp(96px,12vw,150px);
+    height:auto;
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+  }
+  .speech-bubble{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translate(-50%,-100%);
+    margin-top:-6px;
+    background:var(--paper);
+    color:var(--ink);
+    border:2px solid var(--ink);
+    border-radius:14px;
+    padding:5px 12px;
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:500;
+    font-size:clamp(10.5px,1.6vw,13px);
+    white-space:nowrap;
+    box-shadow:2px 2px 0 rgba(27,31,59,0.1);
+    transition:background 0.15s;
+  }
+  .speech-bubble::after,
+  .speech-bubble::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:7px solid transparent;
+    border-right:7px solid transparent;
+  }
+  .speech-bubble::after{
+    bottom:-8px;
+    border-top:8px solid var(--ink);
+  }
+  .speech-bubble::before{
+    bottom:-5.5px;
+    border-left-width:5.5px;
+    border-right-width:5.5px;
+    border-top:6px solid var(--paper);
+    z-index:1;
+    transition:border-top-color 0.15s;
+  }
+  .masthead-mascot-wrap:hover .speech-bubble{background:var(--gold);}
+  .masthead-mascot-wrap:hover .speech-bubble::before{border-top-color:var(--gold);}
+  @media (max-width:640px){
+    .masthead{
+      flex-direction:column-reverse;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .masthead-mascot{width:80px;}
+    .speech-bubble{margin-top:2px;}
+  }
+  .masthead .eyebrow{
+    font-family:'Fraunces',Georgia,serif;
+    font-size:clamp(24px,3.6vw,36px);
+    font-weight:500;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    margin:0 0 6px;
+  }
+  .masthead h1{
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:clamp(14.5px,1.7vw,17px);
+    font-weight:400;
+    letter-spacing:normal;
+    max-width:none;
+    line-height:1.4;
+    color:#4A4E68;
+  }
+  .masthead .meta{
+    margin-top:12px;
+    font-size:12.5px;
+    color:#5C5F78;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+
+  /* ---- countdown row: now a full-width row inside the .quadrants grid
+     itself (grid-column:1/-1), same trick as the foundation strip below
+     it — this guarantees pixel-perfect alignment with the tiles at every
+     width, with no separate container math to keep in sync ---- */
+  .countdown-row{
+    grid-column:1 / -1;
+    background:var(--ink);
+    border-radius:4px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .countdown{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:1 1 0;
+    gap:clamp(10px,2vw,16px);
+    padding:clamp(10px,2vw,14px) clamp(16px,3vw,28px);
+    border-right:1px solid rgba(255,255,255,0.14);
+  }
+  .countdown:last-child{border-right:none;}
+  .countdown-label{
+    margin:0;
+    font-size:clamp(11px,1.8vw,12.5px);
+    color:var(--paper);
+    opacity:0.75;
+    max-width:16ch;
+    line-height:1.25;
+  }
+  .countdown-clock{
+    display:flex;
+    gap:clamp(8px,1.8vw,14px);
+  }
+  .clock-unit{
+    display:flex;
+    flex-direction:row;
+    align-items:baseline;
+    gap:3px;
+    min-width:0;
+  }
+  .clock-num{
+    font-family:'Fraunces',Georgia,serif;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(16px,2.6vw,20px);
+    color:var(--paper);
+    line-height:1;
+  }
+  .clock-name{
+    margin-top:0;
+    font-size:clamp(9.5px,1.6vw,10.5px);
+    color:var(--paper);
+    opacity:0.6;
+  }
+  .countdown.is-past .countdown-clock{display:none;}
+  .countdown.is-past .countdown-label::after{
+    content:" — closed";
+    opacity:0.75;
+  }
+  @media (max-width:600px){
+    .countdown-row{flex-direction:column; align-items:stretch;}
+    .countdown{border-right:none; border-bottom:1px solid rgba(255,255,255,0.14); justify-content:space-between;}
+    .countdown:last-child{border-bottom:none;}
+  }
+
+  /* ---- quadrant grid ----
+     .quadrants sets the column count per breakpoint; every .tile keeps
+     aspect-ratio:1/1 so each one stays a true square whatever width
+     that leaves it — two-up on tablet/desktop, full-width on phones. */
+  .quadrants{
+    max-width:min(94vw, 1200px);
+    margin:0 auto;
+    padding:36px 24px 8px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:start;
+    gap:clamp(12px,2.5vw,24px);
+  }
+  /* small tablets / large phones in portrait: keep the 2x2 square block,
+     just let it shrink with the viewport */
+  @media (max-width:600px){
+    .quadrants{
+      grid-template-columns:1fr 1fr;
+      padding:28px 16px 4px;
+    }
+  }
+  /* two-column squares get too small to hold a heading + paragraph +
+     links once the container drops much below ~640px, so stack to a
+     single (roomy) column well before that point rather than letting
+     the squares shrink past what the text can fit into */
+  @media (max-width:640px){
+    .quadrants{grid-template-columns:1fr;}
+  }
+  /* on a genuinely wide screen, use the extra room to show more content
+     side by side (all four tiles in one row) instead of just stretching
+     the 2x2 pair bigger. Same max-width function as above (still capped
+     at 1200px, so it settles rather than maximising) — only the column
+     count changes here, so there's no separate cap to jump to and no
+     flat "stuck" range where the container stops growing but hasn't
+     switched layout yet. */
+  @media (min-width:1200px){
+    .quadrants{grid-template-columns:repeat(4,1fr);}
+  }
+
+  .tile{
+    position:relative;
+    border-radius:4px;
+    aspect-ratio:1/1;
+    width:100%;
+    padding:clamp(16px,4.5vw,32px) clamp(15px,4.2vw,30px) clamp(14px,3.5vw,26px);
+    display:flex;
+    flex-direction:column;
+    color:var(--paper);
+    overflow:hidden;
+  }
+  .tile .dotgrid{
+    position:absolute;
+    top:16px; right:16px;
+    display:grid;
+    grid-template-columns:repeat(4,5px);
+    grid-auto-rows:5px;
+    gap:5px;
+    opacity:0.5;
+  }
+  .tile .dotgrid span{
+    width:5px;height:5px;border-radius:50%;
+    background:currentColor;
+  }
+  .tile .dotgrid span:nth-child(3),
+  .tile .dotgrid span:nth-child(6),
+  .tile .dotgrid span:nth-child(9),
+  .tile .dotgrid span:nth-child(13){opacity:0;}
+  @media (max-width:420px){
+    .tile .dotgrid{display:none;}
+  }
+
+  .tile .kicker{
+    font-size:clamp(11.5px,2.4vw,13.5px);
+    opacity:0.85;
+    margin-bottom:6px;
+  }
+  .tile h2{
+    font-size:clamp(19px,3.6vw,27px);
+    line-height:1.1;
+    color:var(--paper);
+  }
+  /* each heading now links straight to that quadrant's own page — kept
+     visually identical to a plain heading (no underline, same colour)
+     with a subtle underline only on hover/focus so it still reads as
+     clickable without looking like a normal inline link */
+  .tile h2 a{
+    color:inherit;
+    text-decoration:none;
+  }
+  .tile h2 a:hover,
+  .tile h2 a:focus-visible{
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .tile p.body{
+    font-size:clamp(12px,2.1vw,15px);
+    line-height:1.35;
+    margin:clamp(6px,1.8vw,14px) 0 clamp(8px,1.8vw,18px);
+    max-width:40ch;
+    opacity:0.94;
+    flex:1 1 auto;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:4;
+    overflow:hidden;
+  }
+  .tile .links{
+    margin-top:auto;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(4px,1.4vw,8px);
+    flex-shrink:0;
+  }
+  .tile .links a{
+    color:var(--paper);
+    text-decoration:none;
+    font-size:clamp(11.5px,2vw,14px);
+    line-height:1.25;
+    font-weight:500;
+    border-bottom:1px solid rgba(255,255,255,0.45);
+    width:fit-content;
+    padding-bottom:1px;
+  }
+  .tile .links a:hover{border-bottom-color:rgba(255,255,255,0.9);}
+
+  /* ---- text toggle: sits after .links in the DOM (bottom of the
+     card, per feedback) so it never interrupts the heading → text →
+     links scan order. Only does anything once the grid is in its
+     single-row, four-across layout (see the 1200px breakpoint on
+     .quadrants) — at that width each tile is narrower, so the body
+     paragraph starts hidden behind a "Read more" toggle instead of
+     always being shown. At every narrower layout (2x2 or stacked)
+     the toggle stays hidden and the paragraph just displays normally,
+     exactly as before. */
+  .tile-toggle{
+    display:none;
+    background:none;
+    border:none;
+    padding:0;
+    margin:12px 0 0;
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:clamp(11px,1.8vw,12.5px);
+    font-weight:500;
+    color:var(--paper);
+    text-decoration:underline;
+    text-underline-offset:2px;
+    opacity:0.8;
+    cursor:pointer;
+    text-align:left;
+    width:fit-content;
+  }
+  .tile-toggle:hover{opacity:1;}
+  .tile.fundraiser .tile-toggle{color:var(--ink);}
+  @media (min-width:1200px){
+    .tile:not(.foundation) p.body{
+      display:none;
+    }
+    .tile:not(.foundation) .tile-toggle{
+      display:block;
+    }
+    .tile:not(.foundation).is-expanded p.body{
+      display:block;
+      -webkit-line-clamp:unset;
+      -webkit-box-orient:unset;
+      overflow:visible;
+    }
+    .tile:not(.foundation).is-expanded{
+      aspect-ratio:auto;
+      height:auto;
+    }
+  }
+
+  .tile.students{background:var(--coral);}
+  .tile.academics{background:var(--teal);}
+  .tile.conference{background:var(--violet);}
+  .tile.fundraiser{background:var(--gold);color:var(--ink);}
+  .tile.fundraiser h2, .tile.fundraiser .links a{color:var(--ink);}
+  .tile.fundraiser .links a{border-bottom-color:rgba(27,31,59,0.4);}
+  .tile.fundraiser .links a:hover{border-bottom-color:rgba(27,31,59,0.85);}
+
+
+
+  /* ---- foundation tile: slim full-width strip under the square grid ---- */
+  .tile.foundation{
+    grid-column:1 / -1;
+    aspect-ratio:auto;
+    background:var(--ink);
+    flex-direction:row;
+    align-items:center;
+    gap:clamp(16px,3vw,28px);
+    padding:clamp(14px,1.8vw,18px) clamp(20px,4vw,32px);
+  }
+  .foundation-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-shrink:0;
+    white-space:nowrap;
+  }
+  .foundation-head .kicker{
+    margin:0;
+  }
+  .tile.foundation h2{
+    color:var(--paper);
+    font-size:clamp(16px,1.8vw,19px);
+  }
+  .tile.foundation .body{
+    flex:1 1 auto;
+    margin:0;
+    max-width:60ch;
+    font-size:clamp(12px,1.5vw,13.5px);
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+  }
+  .tile.foundation .links{
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-top:0;
+    flex-shrink:0;
+  }
+  @media (max-width:760px){
+    .tile.foundation{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:8px;
+      padding:16px 20px;
+    }
+    .tile.foundation .body{max-width:none;}
+  }
+
+  /* ---- sponsor banner: slim, edge-to-edge, auto-scrolling ---- */
+  .sponsor-banner{
+    width:100%;
+    margin:52px 0 0;
+    padding:16px 0 14px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .sponsor-banner-label{
+    max-width:980px;
+    margin:0 auto 12px;
+    padding:0 24px;
+    text-align:center;
+    font-size:12px;
+    color:#5C5F78;
+  }
+  .sponsor-marquee{
+    width:100%;
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    mask-image:linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
+  .sponsor-track{
+    display:flex;
+    align-items:center;
+    width:max-content;
+    gap:clamp(24px,4vw,44px);
+    animation:sponsor-scroll 24s linear infinite;
+  }
+  .sponsor-track:hover{animation-play-state:paused;}
+  @keyframes sponsor-scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  .sponsor-slot{
+    flex-shrink:0;
+    width:112px;
+    height:38px;
+    border:1px dashed var(--line);
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+  }
+  .sponsor-slot span{
+    font-size:11px;
+    color:#9A9DB3;
+  }
+  .sponsor-banner-cta{
+    display:block;
+    margin-top:12px;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--violet);
+    text-decoration:none;
+  }
+  .sponsor-banner-cta:hover{text-decoration:underline;}
+  @media (prefers-reduced-motion:reduce){
+    .sponsor-track{animation:none;}
+  }
+
+  /* ---- footer strip ---- */
+  .footer-strip{
+    max-width:980px;
+    margin:44px auto 64px;
+    padding:0 24px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+    font-size:13.5px;
+    color:#5C5F78;
+    border-top:1px solid var(--line);
+    padding-top:20px;
+  }
+  .footer-strip a{color:var(--violet);}
+
+  .notes h3{font-size:14px; margin-bottom:8px; font-family:'Inter',sans-serif; font-weight:600;}
+  .notes ul{margin:0; padding-left:18px;}
+  .notes li{margin-bottom:5px;}
+
+  /* ---- fundraiser banner: a slim, high-contrast strip above the
+     masthead — the site's single most prominent call to action, since
+     it's the first thing on the page and the only thing outside the
+     page's own colour system (gold/coral/teal/violet), which is what
+     makes it read as urgent/different rather than another quadrant. ---- */
+  .fundraiser-banner{
+    background:var(--gold);
+    color:var(--ink);
+  }
+  .fundraiser-banner-inner{
+    max-width:min(94vw, 1200px);
+    margin:0 auto;
+    padding:12px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+    text-align:center;
+  }
+  .fundraiser-banner p{
+    margin:0;
+    font-size:13.5px;
+    font-weight:500;
+  }
+  .fundraiser-banner strong{font-weight:700;}
+  .fundraiser-banner a.donate-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:7px 16px;
+    border-radius:100px;
+    font-size:13px;
+    font-weight:600;
+    text-decoration:none;
+    flex-shrink:0;
+  }
+  .fundraiser-banner a.donate-link:hover{background:#2C2F4A;}
+</style>
+</head>
+<body>
+
+  <div class="fundraiser-banner">
+    <div class="fundraiser-banner-inner">
+      <p>🎉 <strong>Lovelace Forward: Help the Next Generation</strong> — support our GoFundMe for BCS Communities by BCSWomen Lovelace.</p>
+      <a class="donate-link" href="https://www.gofundme.com/f/lovelace-forward-help-the-next-generation" target="_blank" rel="noopener">Donate on GoFundMe ↗</a>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="masthead-text">
+      <p class="eyebrow">BCSWomen Lovelace Colloquium</p>
+      <h1>A free one-day conference for undergraduate and MSc women &amp; non-binary students in computing — talks from women in the field, a poster contest, and a chance to network with students from across the UK.</h1>
+      <div class="meta">
+        <span>Next event: 8 April 2027, Birmingham</span>
+        <span>Founded 2008 by Dr Hannah Dee</span>
+      </div>
+    </div>
+    <a class="masthead-mascot-wrap" href="https://www.gofundme.com/f/lovelace-forward-help-the-next-generation" target="_blank" rel="noopener" aria-label="Support Lovelace Forward on GoFundMe">
+      <span class="speech-bubble">Go fund me!</span>
+      <img class="masthead-mascot" src="https://bcswomenlovelace.bcs.org/wp-content/uploads/AdaMarkMS-768x880.png" alt="8-bit pixel art portrait of Ada Lovelace, designed by Alex Stanhope for BCSWomen Lovelace Colloquium" width="180" height="207" loading="lazy">
+    </a>
+  </header>
+
+  <section class="quadrants">
+
+    <div class="countdown-row" aria-label="Key dates">
+      <div class="countdown" data-target="2027-02-07T23:59:00">
+        <p class="countdown-label">Poster abstract deadline · 7 Feb 2027</p>
+        <div class="countdown-clock">
+          <div class="clock-unit"><span class="clock-num" data-unit="days">–</span><span class="clock-name">days</span></div>
+          <div class="clock-unit"><span class="clock-num" data-unit="hours">–</span><span class="clock-name">hrs</span></div>
+          <div class="clock-unit"><span class="clock-num" data-unit="minutes">–</span><span class="clock-name">min</span></div>
+          <div class="clock-unit"><span class="clock-num" data-unit="seconds">–</span><span class="clock-name">sec</span></div>
+        </div>
+      </div>
+      <div class="countdown" data-target="2027-04-08T09:00:00">
+        <p class="countdown-label">Colloquium 2027 · 8 Apr, Birmingham</p>
+        <div class="countdown-clock">
+          <div class="clock-unit"><span class="clock-num" data-unit="days">–</span><span class="clock-name">days</span></div>
+          <div class="clock-unit"><span class="clock-num" data-unit="hours">–</span><span class="clock-name">hrs</span></div>
+          <div class="clock-unit"><span class="clock-num" data-unit="minutes">–</span><span class="clock-name">min</span></div>
+          <div class="clock-unit"><span class="clock-num" data-unit="seconds">–</span><span class="clock-name">sec</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tile conference">
+      <div class="dotgrid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p class="kicker">This year's event</p>
+      <h2><a href="2027/">Colloquium 2027</a></h2>
+      <p class="body">Lovelace 2027 will be hosted in Birmingham. Registration, the call for poster abstracts, and the full programme will appear here as the day gets closer.</p>
+      <div class="links">
+        <a href="2027/">Colloquium 2027: Birmingham</a>
+        <a href="https://bcswomenlovelace.bcs.org/?page_id=36">Previous conferences</a>
+      </div>
+      <button class="tile-toggle" type="button" aria-expanded="false">Read more</button>
+    </div>
+
+    <div class="tile students">
+      <div class="dotgrid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p class="kicker">For students</p>
+      <h2><a href="students/">Students</a></h2>
+      <p class="body">Free to attend, with travel and accommodation covered for everyone whose poster abstract is accepted. Come and share your work, hear talks from women in academia and industry, and meet students from across the UK.</p>
+      <div class="links">
+        <a href="students/">Submit a poster abstract</a>
+        <a href="https://bcswomenlovelace.bcs.org/?page_id=10">Read student testimonials</a>
+        <a href="https://bcswomenlovelace.bcs.org/?page_id=99">FAQs</a>
+      </div>
+      <button class="tile-toggle" type="button" aria-expanded="false">Read more</button>
+    </div>
+
+    <div class="tile academics">
+      <div class="dotgrid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p class="kicker">For lecturers &amp; departments</p>
+      <h2><a href="academics/">Academics</a></h2>
+      <p class="body">Encourage your students to submit a poster, put your department forward to host a future Colloquium, or become a University partner pledging to cover your own students' travel.</p>
+      <div class="links">
+        <a href="academics/">Speak or volunteer at the event</a>
+        <a href="https://bcswomenlovelace.bcs.org/?page_id=494">University partnerships &amp; supporter status</a>
+        <a href="https://groups.google.com/group/bcswomen-lovelace-publicity?hl=en">Subscribe to the publicity list</a>
+      </div>
+      <button class="tile-toggle" type="button" aria-expanded="false">Read more</button>
+    </div>
+
+    <div class="tile fundraiser">
+      <div class="dotgrid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p class="kicker">For companies &amp; donors</p>
+      <h2><a href="sponsor/">Sponsor &amp; support</a></h2>
+      <p class="body">Sponsorship is what keeps the day free and lets us cover student travel, accommodation and poster prizes. Sponsor tiers cover the headline slot, lunch, prizes and socials.</p>
+      <div class="links">
+        <a href="sponsor/">Sponsorship packages</a>
+        <a href="https://www.gofundme.com/f/lovelace-forward-help-the-next-generation" target="_blank" rel="noopener">Make a donation ↗</a>
+        <a href="mailto:lovelacecolloquium@bcs.co.uk">Contact the leadership team</a>
+      </div>
+      <button class="tile-toggle" type="button" aria-expanded="false">Read more</button>
+    </div>
+
+    <div class="tile foundation">
+      <div class="foundation-head">
+        <p class="kicker">Since 2008</p>
+        <h2>About Lovelace</h2>
+      </div>
+      <p class="body">Named after Ada Lovelace, this free one-day conference for women and non-binary computing students has moved around the UK every year since 2008.</p>
+      <div class="links">
+        <a href="./">Full history &amp; aims</a>
+        <a href="https://bcswomenlovelace.bcs.org/?page_id=8">Code of Conduct</a>
+        <a href="https://bcswomenlovelace.bcs.org/?page_id=36">Previous conferences</a>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="sponsor-banner" aria-label="Sponsors">
+    <p class="sponsor-banner-label">Lovelace 2027 is made possible by</p>
+    <div class="sponsor-marquee">
+      <div class="sponsor-track">
+        <div class="sponsor-slot"><span>Add logo</span></div>
+        <div class="sponsor-slot"><span>Add logo</span></div>
+        <div class="sponsor-slot"><span>Add logo</span></div>
+        <div class="sponsor-slot"><span>Add logo</span></div>
+        <div class="sponsor-slot"><span>Add logo</span></div>
+        <div class="sponsor-slot"><span>Add logo</span></div>
+        <!-- duplicate set — keeps the loop seamless, don't remove -->
+        <div class="sponsor-slot" aria-hidden="true"><span>Add logo</span></div>
+        <div class="sponsor-slot" aria-hidden="true"><span>Add logo</span></div>
+        <div class="sponsor-slot" aria-hidden="true"><span>Add logo</span></div>
+        <div class="sponsor-slot" aria-hidden="true"><span>Add logo</span></div>
+        <div class="sponsor-slot" aria-hidden="true"><span>Add logo</span></div>
+        <div class="sponsor-slot" aria-hidden="true"><span>Add logo</span></div>
+      </div>
+    </div>
+    <a class="sponsor-banner-cta" href="sponsor/">Become a sponsor →</a>
+  </section>
+
+
+  <footer class="footer-strip">
+    <span>Copyright © 2027 BCSWomen Lovelace Colloquium</span>
+    <span><a href="https://bcswomenlovelace.bcs.org/?page_id=8">Code of Conduct</a> · <a href="https://bcswomenlovelace.bcs.org/?page_id=621">Pixel mascots</a></span>
+  </footer>
+
+  <script>
+    function updateCountdowns(){
+      document.querySelectorAll('.countdown').forEach(function(el){
+        var target = new Date(el.dataset.target).getTime();
+        var now = Date.now();
+        var diff = target - now;
+
+        if(diff <= 0){
+          el.classList.add('is-past');
+          return;
+        }
+
+        var days = Math.floor(diff / 86400000);
+        var hours = Math.floor((diff % 86400000) / 3600000);
+        var minutes = Math.floor((diff % 3600000) / 60000);
+        var seconds = Math.floor((diff % 60000) / 1000);
+
+        el.querySelector('[data-unit="days"]').textContent = days;
+        el.querySelector('[data-unit="hours"]').textContent = String(hours).padStart(2,'0');
+        el.querySelector('[data-unit="minutes"]').textContent = String(minutes).padStart(2,'0');
+        el.querySelector('[data-unit="seconds"]').textContent = String(seconds).padStart(2,'0');
+      });
+    }
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
+
+    // Tile text toggle — only visibly does anything once the grid is in
+    // its single-row (four-across) layout at 1200px+; harmless at every
+    // narrower width since the button stays hidden there via CSS.
+    document.querySelectorAll('.tile-toggle').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var tile = btn.closest('.tile');
+        var expanded = tile.classList.toggle('is-expanded');
+        btn.setAttribute('aria-expanded', expanded);
+        btn.textContent = expanded ? 'Show less' : 'Read more';
+      });
+    });
+  </script>
+
+</body>
+</html>
